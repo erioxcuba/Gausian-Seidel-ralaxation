@@ -50,7 +50,7 @@ def build_control_panel(callbacks: dict):
             dpg.add_spacer(height=8)
 
         # Relaxation
-        with dpg.collapsing_header(label="Relaxation", default_open=True):
+        with dpg.collapsing_header(label="linear-solve coefficient (a)", default_open=True):
             dpg.add_slider_float(label="ax (horiz)", tag="gs_ax",
                                  default_value=1.0, min_value=0.0, max_value=20.0,
                                  format="%.3f", width=INPUT_W)
@@ -72,14 +72,18 @@ def build_control_panel(callbacks: dict):
             dpg.add_text("Auto: ax = dt*diff*(cols-1)^2", color=(130, 130, 155))
             dpg.add_text("      ay = dt*diff*(rows-1)^2", color=(130, 130, 155))
             dpg.add_spacer(height=4)
-            dpg.add_slider_float(label="Factor (w)", tag="gs_omega",
-                                 default_value=1.0, min_value=0.1, max_value=2.0,
-                                 format="%.3f", width=INPUT_W)
-            dpg.add_text("w<1 under-relax   w=1 GS   w>1 SOR on target", color=(130, 130, 155))
             dpg.add_slider_int(label="Max Iterations", tag="gs_max_iter",
                                default_value=50, min_value=1, max_value=500, width=INPUT_W)
             dpg.add_slider_int(label="Steps / sec", tag="gs_speed",
                                default_value=5, min_value=1, max_value=60, width=INPUT_W)
+            dpg.add_spacer(height=8)
+
+        # Relaxation factor
+        with dpg.collapsing_header(label="Relaxation", default_open=True):
+            dpg.add_slider_float(label="Factor (w)", tag="gs_omega",
+                                 default_value=1.0, min_value=0.1, max_value=2.0,
+                                 format="%.3f", width=INPUT_W)
+            dpg.add_text("w<1 under-relax   w=1 GS   w>1 SOR on target", color=(130, 130, 155))
             dpg.add_spacer(height=8)
 
         # Control

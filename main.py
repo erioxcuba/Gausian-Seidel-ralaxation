@@ -59,6 +59,8 @@ class AppState:
         self.edit_cell     = None
         self.last_step_t   = 0.0
         self.steps_per_sec = 5
+        self.prev_ax       = 1.0
+        self.prev_ay       = 1.0
         self._refresh_layout()
 
     def _refresh_layout(self):
@@ -250,8 +252,19 @@ def main():
             dpg.set_value("gs_ax", min(ax, 20.0))
             dpg.set_value("gs_ay", min(ay, 20.0))
         else:
-            state.solver.ax = dpg.get_value("gs_ax")
-            state.solver.ay = dpg.get_value("gs_ay")
+            ax = dpg.get_value("gs_ax")
+            ay = dpg.get_value("gs_ay")
+            if state.solver.rows == state.solver.cols:
+                if ax != state.prev_ax:
+                    ay = ax
+                    dpg.set_value("gs_ay", ay)
+                elif ay != state.prev_ay:
+                    ax = ay
+                    dpg.set_value("gs_ax", ax)
+            state.solver.ax = ax
+            state.solver.ay = ay
+            state.prev_ax   = ax
+            state.prev_ay   = ay
         state.solver.omega    = dpg.get_value("gs_omega")
         state.solver.max_iter = dpg.get_value("gs_max_iter")
         state.steps_per_sec   = dpg.get_value("gs_speed")
