@@ -51,10 +51,31 @@ def build_control_panel(callbacks: dict):
 
         # Relaxation
         with dpg.collapsing_header(label="Relaxation", default_open=True):
+            dpg.add_slider_float(label="ax (horiz)", tag="gs_ax",
+                                 default_value=1.0, min_value=0.0, max_value=20.0,
+                                 format="%.3f", width=INPUT_W)
+            dpg.add_slider_float(label="ay (vert)",  tag="gs_ay",
+                                 default_value=1.0, min_value=0.0, max_value=20.0,
+                                 format="%.3f", width=INPUT_W)
+            dpg.add_text("target = (x0+ax*(L+R)+ay*(T+B)) / (1+2ax+2ay)", color=(130, 130, 155))
+            dpg.add_spacer(height=4)
+            dpg.add_radio_button(items=["Manual", "Auto"],
+                                 tag="gs_a_mode", default_value="Manual",
+                                 horizontal=True)
+            dpg.add_spacer(height=4)
+            dpg.add_slider_float(label="dt",   tag="gs_dt",
+                                 default_value=0.1, min_value=0.001, max_value=1.0,
+                                 format="%.4f", width=INPUT_W)
+            dpg.add_slider_float(label="diff", tag="gs_diff",
+                                 default_value=0.5, min_value=0.0, max_value=5.0,
+                                 format="%.3f", width=INPUT_W)
+            dpg.add_text("Auto: ax = dt*diff*(cols-1)^2", color=(130, 130, 155))
+            dpg.add_text("      ay = dt*diff*(rows-1)^2", color=(130, 130, 155))
+            dpg.add_spacer(height=4)
             dpg.add_slider_float(label="Factor (w)", tag="gs_omega",
                                  default_value=1.0, min_value=0.1, max_value=2.0,
                                  format="%.3f", width=INPUT_W)
-            dpg.add_text("w<1 under-relax   w=1 Gauss-Seidel   w>1 SOR", color=(130, 130, 155))
+            dpg.add_text("w<1 under-relax   w=1 GS   w>1 SOR on target", color=(130, 130, 155))
             dpg.add_slider_int(label="Max Iterations", tag="gs_max_iter",
                                default_value=50, min_value=1, max_value=500, width=INPUT_W)
             dpg.add_slider_int(label="Steps / sec", tag="gs_speed",
@@ -106,7 +127,8 @@ def build_control_panel(callbacks: dict):
             dpg.add_spacer(height=8)
 
         dpg.add_separator()
-        dpg.add_text("B = boundary cell (fixed during iteration)", color=(130, 130, 155))
-        dpg.add_text("Yellow border = hovered cell", color=(130, 130, 155))
-        dpg.add_text("Green border  = cells used in its calculation", color=(130, 130, 155))
+        dpg.add_text("B      = boundary cell (fixed)", color=(130, 130, 155))
+        dpg.add_text("Yellow = cell being computed / x0 source", color=(130, 130, 155))
+        dpg.add_text("Green  = T and L  (from current sweep)", color=(130, 130, 155))
+        dpg.add_text("Orange = B and R  (from previous step)", color=(130, 130, 155))
         dpg.add_spacer(height=12)
